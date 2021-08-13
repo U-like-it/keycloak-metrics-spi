@@ -8,6 +8,6 @@ FROM openjdk:8-jre-slim
 RUN mkdir /app
 
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/keycloak-metrics-spi.jar
-COPY --from=build /home/gradle/src/build/libs/*.jar /app/keycloak-metrics-spi.dodeploy
+RUN touch /app/keycloak-metrics-spi.jar.dodeploy
 
 ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/keycloak-metrics-spi.jar"]
