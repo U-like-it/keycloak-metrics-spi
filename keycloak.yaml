@@ -1,0 +1,110 @@
+extraInitContainers: |
+    - name: spi-provider
+      image: 290531689160.dkr.ecr.eu-central-1.amazonaws.com/ulikeit-keycloak-metrics-spi:latest
+      imagePullPolicy: Always
+      command:
+        - sh
+      args:
+        - -c
+        - |
+          echo "Copying spi..."
+          cp /*.jar /deployments
+          cp /*.dodeploy /deployments
+      volumeMounts:
+        - name: keycloak-spi
+          mountPath: /deployments
+
+extraVolumes: |
+    - name: realm-secret
+      secret:
+        secretName: realm-secret
+    - name: keycloak-spi
+      emptyDir: {}
+
+extraVolumeMounts: |
+    - name: realm-secret
+      mountPath: "/realm/"
+      readOnly: true
+    - name: keycloak-spi
+      mountPath: /opt/jboss/keycloak/standalone/deployments
+
+extraEnv: |
+    - name: JGROUPS_DISCOVERY_PROTOCOL
+      value: kubernetes.KUBE_PING
+    - name: KUBERNETES_NAMESPACE
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.namespace
+    - name: CACHE_OWNERS_COUNT
+      value: "2"
+    - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+      value: "2"
+    - name: PROXY_ADDRESS_FORWARDING
+      value: "true"
+    - name: KEYCLOAK_STATISTICS
+      value: all
+    - name: JAVA_OPTS
+      value:
+        -Djava.net.preferIPv4Stack=true
+        -Dkeycloak.migration.provider=dir
+        -Dkeycloak.migration.action=import
+        -Dkeycloak.migration.strategy=IGNORE_EXISTING
+        -Dkeycloak.migration.dir=/realm
+    - name: DB_VENDOR
+      value: postgres
+    - name: DB_ADDR
+      value: ulikeit-database.default.svc.cluster.local
+    - name: DB_PORT
+      value: "5432"
+    - name: DB_DATABASE
+      value: keycloak
+    - name: DB_USER
+      value: dbuser
+    - name: DB_PASSWORD
+      value: "1GmemyMNfaXx6lxJAzS4Nih6WJ9SyCaRHhUrustzruUZPrUyvcxCZUOBEOYarJwk"
+    - name: KEYCLOAK_USER
+      value: admin
+    - name: KEYCLOAK_PASSWORD
+      value: Tea4me2N8
+
+rbac:
+    create: true
+    rules:
+        - apiGroups:
+              - ""
+          resources:
+              - pods
+          verbs:
+              - get
+              - list
+
+serviceAccount:
+    create: false
+    name: ulikeit
+
+service:
+    type: NodePort
+    httpPort: "8080"
+    httpNodePort: "30800"
+
+postgresql:
+    enabled: false
+
+replicas: 1
+ingres:
+    enabled: true
+
+autoscaling:
+    enabled: true
+
+serviceMonitor:
+    # If `true`, a ServiceMonitor resource for the prometheus-operator is created
+    enabled: false
+    namespace: default
+extraServiceMonitor:
+    enabled: false
+    namespace: default
+
+prometheusRule:
+    enabled: false

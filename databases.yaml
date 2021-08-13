@@ -1,0 +1,41 @@
+kind: "postgresql"
+apiVersion: "acid.zalan.do/v1"
+
+metadata:
+    name: "ulikeit-database"
+    namespace: "default"
+    labels:
+        team: ulikeit
+
+spec:
+    teamId: "ulikeit"
+    postgresql:
+        version: "13"
+    numberOfInstances: 1
+    enableConnectionPooler: true
+    volume:
+        size: "15Gi"
+    users:
+        keycloak:
+            - superuser
+            - createdb
+        session:
+            - superuser
+            - createdb
+        storage:
+            - superuser
+            - createdb
+    databases:
+        keycloak: keycloak
+        session: session
+        storage: storage
+    allowedSourceRanges:
+    # IP ranges to access your cluster go here
+
+    resources:
+        requests:
+            cpu: 100m
+            memory: 100Mi
+        limits:
+            cpu: 500m
+            memory: 500Mi
