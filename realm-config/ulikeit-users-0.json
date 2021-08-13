@@ -1,0 +1,61 @@
+{
+  "realm": "ulikeit",
+  "users": [
+    {
+      "id": "411bd57f-d579-454d-adb5-9a16ef444c85",
+      "createdTimestamp": 1595684870630,
+      "username": "a@a.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Alice",
+      "lastName": "Burks",
+      "email": "a@a.com",
+      "credentials": [
+        {
+          "id": "413729cc-69f9-4235-a5a5-51209a22ce81",
+          "type": "password",
+          "createdDate": 1595684961745,
+          "secretData": "{\"value\":\"sks0s2Q8cEjcejfiXW+EbhMz04x2PwczWA0aHz5HyX5lR9bdvwbxstnlhKkIihQp+fMvAVJmH9bi1AXfP2LdTQ==\",\"salt\":\"oHdNkL4T+LIZWrFwNT0y9g==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      },
+      "notBefore": 0,
+      "groups": ["/Shop Users"]
+    },
+    {
+      "id": "f17dcfc2-1570-422c-a96d-2ef2165a1ca6",
+      "createdTimestamp": 1595684937627,
+      "username": "o@o.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Bob",
+      "lastName": "Blake",
+      "email": "o@o.com",
+      "credentials": [
+        {
+          "id": "65a2ffac-6f7e-413e-b759-f2e6e78a438b",
+          "type": "password",
+          "createdDate": 1595684950128,
+          "secretData": "{\"value\":\"PuwxMuIT6ckuCaVjjr4hvMo+DVXiDdI3nU5QIWNcBAe4L6QLh0/f04EsJxzpsOwyOlYThcDY0ZKY/r2/zp0RhA==\",\"salt\":\"PBiQxixcKl2ADMkqlnXhtg==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      },
+      "notBefore": 0,
+      "groups": ["/Editors"]
+    }
+  ]
+}
