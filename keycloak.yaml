@@ -33,6 +33,7 @@ extraEnv: |
         -Dkeycloak.migration.action=import
         -Dkeycloak.migration.strategy=IGNORE_EXISTING
         -Dkeycloak.migration.dir=/realm
+        -Dkeycloak.profile.feature.upload_scripts=enabled
     - name: DB_VENDOR
       value: postgres
     - name: DB_ADDR
