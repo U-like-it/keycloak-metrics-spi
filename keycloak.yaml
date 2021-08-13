@@ -23,7 +23,11 @@ extraEnv: |
     - name: KEYCLOAK_STATISTICS
       value: all
     - name: JAVA_OPTS
-      value:
+      value: >-
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=50.0
+        -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS
+        -Djava.awt.headless=true
         -Djava.net.preferIPv4Stack=true
         -Dkeycloak.migration.provider=dir
         -Dkeycloak.migration.action=import
@@ -65,11 +69,14 @@ service:
     type: NodePort
     httpPort: "8080"
     httpNodePort: "30800"
+    annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9990"
 
 postgresql:
     enabled: false
 
-replicas: 3
+replicas: 1
 ingres:
     enabled: false
 
@@ -78,10 +85,10 @@ autoscaling:
 
 serviceMonitor:
     # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-    enabled: false
+    enabled: true
     namespace: default
 extraServiceMonitor:
-    enabled: false
+    enabled: true
     namespace: default
 
 prometheusRule:
