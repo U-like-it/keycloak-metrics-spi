@@ -1,10 +1,10 @@
-name: keycloak-pipeline
+name: keycloak-metrics-pipeline
 on:
     push:
         branches:
             - production
 jobs:
-    release-authorization:
+    release-keycloak:
         runs-on: ubuntu-latest
         steps:
             -   run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
@@ -25,6 +25,15 @@ jobs:
                     aws_region: ${{ secrets.AWS_REGION }}
                     cluster_name: ulikeit-kubernetes
                     args: apply -f ./databases.yaml
+
+            -   name: Delete realm secret
+                uses: ianbelcher/eks-kubectl-action@master
+                with:
+                    aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    aws_region: ${{ secrets.AWS_REGION }}
+                    cluster_name: ulikeit-kubernetes
+                    args: delete secret realm-secret
 
             -   name: Create realm secret
                 uses: ianbelcher/eks-kubectl-action@master
