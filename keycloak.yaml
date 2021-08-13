@@ -1,19 +1,19 @@
-extraInitContainers: |
-    - name: spi-provider
-      image: 290531689160.dkr.ecr.eu-central-1.amazonaws.com/ulikeit-keycloak-metrics-spi:latest
-      imagePullPolicy: Always
-      command:
-        - sh
-      args:
-        - -c
-        - |
-          echo "Copying spi..."
-          cp /*.jar /deployments
-          cp /*.dodeploy /deployments
-      volumeMounts:
-        - name: keycloak-spi
-          mountPath: /deployments
-
+#extraInitContainers: |
+#    - name: spi-provider
+#      image: 290531689160.dkr.ecr.eu-central-1.amazonaws.com/ulikeit-keycloak-metrics-spi:latest
+#      imagePullPolicy: Always
+#      command:
+#        - sh
+#      args:
+#        - -c
+#        - |
+#          echo "Copying spi..."
+#          cp /*.jar /deployments
+#          cp /*.dodeploy /deployments
+#      volumeMounts:
+#        - name: keycloak-spi
+#          mountPath: /deployments
+#
 extraVolumes: |
     - name: realm-secret
       secret:
