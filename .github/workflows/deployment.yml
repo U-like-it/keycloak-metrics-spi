@@ -46,14 +46,14 @@ jobs:
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
-            - name: Build, tag, and push image to Amazon ECR
-              env:
-                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-                ECR_REPOSITORY: ulikeit-keycloak-metrics-spi
-                IMAGE_TAG: ${{ steps.version.outputs.content }}
-              run: |
-                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg app_version="${{ steps.version.outputs.content }}" --build-arg auth_token="${{ secrets.REPO_TOKEN }}" .
-                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#            - name: Build, tag, and push image to Amazon ECR
+#              env:
+#                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#                ECR_REPOSITORY: ulikeit-keycloak-metrics-spi
+#                IMAGE_TAG: ${{ steps.version.outputs.content }}
+#              run: |
+#                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg app_version="${{ steps.version.outputs.content }}" --build-arg auth_token="${{ secrets.REPO_TOKEN }}" .
+#                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
             - name: helm repo add keycloak
               uses: koslib/helm-eks-action@master

@@ -1,33 +1,11 @@
-extraInitContainers: |
-    - name: spi-provider
-      image: 290531689160.dkr.ecr.eu-central-1.amazonaws.com/ulikeit-keycloak-metrics-spi:latest
-      imagePullPolicy: Always
-      command:
-        - sh
-      args:
-        - -c
-        - |
-          echo "Copying spi..."
-          cp /*.jar /deployments
-          cp /*.dodeploy /deployments
-      volumeMounts:
-        - name: keycloak-spi
-          mountPath: /deployments
-
 extraVolumes: |
     - name: realm-secret
       secret:
         secretName: realm-secret
-    - name: keycloak-spi
-      emptyDir: {}
-
 extraVolumeMounts: |
     - name: realm-secret
       mountPath: "/realm/"
       readOnly: true
-    - name: keycloak-spi
-      mountPath: /opt/jboss/keycloak/standalone/deployments
-
 extraEnv: |
     - name: JGROUPS_DISCOVERY_PROTOCOL
       value: kubernetes.KUBE_PING
@@ -91,20 +69,20 @@ service:
 postgresql:
     enabled: false
 
-replicas: 1
+replicas: 3
 ingres:
-    enabled: true
+    enabled: false
 
 autoscaling:
     enabled: true
 
 serviceMonitor:
     # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-    enabled: false
+    enabled: true
     namespace: default
 extraServiceMonitor:
     enabled: false
     namespace: default
 
 prometheusRule:
-    enabled: false
+    enabled: true
