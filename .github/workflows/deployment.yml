@@ -27,7 +27,7 @@ jobs:
             - name: dir
               run: ls
             - name: Create databases
-              uses: kodermax/kubectl-aws-eks@master
+              uses: phamquyhai/kubernetes-action@master
               env:
                   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
               with:
