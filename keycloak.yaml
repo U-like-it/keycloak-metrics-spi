@@ -88,7 +88,7 @@ serviceMonitor:
     enabled: false
     namespace: default
 extraServiceMonitor:
-    enabled: true
+    enabled: false
     namespace: default
 
 prometheusRule:

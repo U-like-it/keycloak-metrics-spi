@@ -72,6 +72,6 @@ jobs:
               env:
                   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
               with:
-                  command: helm upgrade keycloak --install --wait codecentric/keycloak --values ./keycloak.yaml
+                  command: helm upgrade keycloak --install codecentric/keycloak --values ./keycloak.yaml
 
             -   run: echo "🎉 The keycloak deployment is finished."
