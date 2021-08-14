@@ -14,7 +14,7 @@ spec:
     numberOfInstances: 1
     enableConnectionPooler: true
     volume:
-        size: "15Gi"
+        size: "10Gi"
     users:
         keycloak:
             - superuser

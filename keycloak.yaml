@@ -1,12 +1,37 @@
+extraInitContainers: |
+    - name: spi-provider
+      image: 290531689160.dkr.ecr.eu-central-1.amazonaws.com/ulikeit-keycloak-metrics-spi:latest
+      imagePullPolicy: Always
+      command:
+        - sh
+      args:
+        - -c
+        - |
+          echo "Copying spi..."
+          cp /*.jar /deployments
+          cp /*.dodeploy /deployments
+      volumeMounts:
+        - name: keycloak-spi
+          mountPath: /deployments
+
 extraVolumes: |
     - name: realm-secret
       secret:
         secretName: realm-secret
+    - name: keycloak-spi
+      emptyDir: {}
+
 extraVolumeMounts: |
     - name: realm-secret
       mountPath: "/realm/"
       readOnly: true
+    - name: keycloak-spi
+      mountPath: /opt/jboss/keycloak/standalone/deployments
+
 extraEnv: |
+    envFrom:
+    - secretRef:
+        name: keycloak.ulikeit-database.credentials.postgresql.acid.zalan.do
     - name: JGROUPS_DISCOVERY_PROTOCOL
       value: kubernetes.KUBE_PING
     - name: KUBERNETES_NAMESPACE
@@ -43,9 +68,9 @@ extraEnv: |
     - name: DB_DATABASE
       value: keycloak
     - name: DB_USER
-      value: dbuser
+      value: username | base64 -d
     - name: DB_PASSWORD
-      value: "1GmemyMNfaXx6lxJAzS4Nih6WJ9SyCaRHhUrustzruUZPrUyvcxCZUOBEOYarJwk"
+      value: password | base64 -d
     - name: KEYCLOAK_USER
       value: admin
     - name: KEYCLOAK_PASSWORD
