@@ -1,4 +1,4 @@
-name: keycloak-metrics-pipeline
+name: keycloak-metrics-spi-pipeline
 on:
     push:
         branches:
@@ -26,15 +26,6 @@ jobs:
                     cluster_name: ulikeit-kubernetes
                     args: apply -f ./databases.yaml
 
-#            -   name: Create realm secret
-#                uses: ianbelcher/eks-kubectl-action@master
-#                with:
-#                    aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#                    aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#                    aws_region: ${{ secrets.AWS_REGION }}
-#                    cluster_name: ulikeit-kubernetes
-#                    args: create secret generic realm-secret --from-file=realm-config/master-realm.json,realm-config/master-users-0.json,realm-config/ulikeit-realm.json,realm-config/ulikeit-users-0.json
-
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v1
               with:
@@ -46,14 +37,14 @@ jobs:
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
-#            - name: Build, tag, and push image to Amazon ECR
-#              env:
-#                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-#                ECR_REPOSITORY: ulikeit-keycloak-metrics-spi
-#                IMAGE_TAG: ${{ steps.version.outputs.content }}
-#              run: |
-#                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg app_version="${{ steps.version.outputs.content }}" --build-arg auth_token="${{ secrets.REPO_TOKEN }}" .
-#                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            - name: Build, tag, and push image to Amazon ECR
+              env:
+                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                ECR_REPOSITORY: ulikeit-keycloak-metrics-spi
+                IMAGE_TAG: ${{ steps.version.outputs.content }}
+              run: |
+                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg app_version="${{ steps.version.outputs.content }}" --build-arg auth_token="${{ secrets.REPO_TOKEN }}" .
+                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
             - name: helm repo add keycloak
               uses: koslib/helm-eks-action@master
