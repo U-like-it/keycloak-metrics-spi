@@ -69,7 +69,7 @@ extraEnv: |
     - name: DB_PASSWORD
       valueFrom:
           secretKeyRef:
-            name: {{ include "keycloak.ulikeit-database.credentials.postgresql.acid.zalan.do" . }}
+            name: keycloak.ulikeit-database.credentials.postgresql.acid.zalan.do
             key: password
     - name: KEYCLOAK_USER
       value: admin
