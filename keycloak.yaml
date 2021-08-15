@@ -16,8 +16,8 @@ extraInitContainers: |
 
 extraVolumes: |
     - name: realm-secret
-      secret:
-        secretName: realm-secret
+      configMap:
+        name: realm-secret
     - name: keycloak-spi
       emptyDir: {}
 
