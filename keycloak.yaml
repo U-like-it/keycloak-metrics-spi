@@ -30,8 +30,8 @@ extraVolumeMounts: |
 
 extraEnv: |
     envFrom:
-    - secretRef:
-        name: keycloak.ulikeit-database.credentials.postgresql.acid.zalan.do
+        - secretRef:
+            name: keycloak.ulikeit-database.credentials.postgresql.acid.zalan.do
     - name: JGROUPS_DISCOVERY_PROTOCOL
       value: kubernetes.KUBE_PING
     - name: KUBERNETES_NAMESPACE
@@ -68,9 +68,9 @@ extraEnv: |
     - name: DB_DATABASE
       value: keycloak
     - name: DB_USER
-      value: username | base64 -d
+      value: $username | base64 -d
     - name: DB_PASSWORD
-      value: password | base64 -d
+      value: $password | base64 -d
     - name: KEYCLOAK_USER
       value: admin
     - name: KEYCLOAK_PASSWORD
