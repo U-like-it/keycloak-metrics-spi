@@ -29,9 +29,8 @@ spec:
         keycloak: keycloak
         session: session
         storage: storage
-    allowedSourceRanges:
-    # IP ranges to access your cluster go here
-
+    allowedSourceRanges: # load balancers' source ranges for both master and replica services
+        - 192.168.0.0/16
     resources:
         requests:
             cpu: 100m
