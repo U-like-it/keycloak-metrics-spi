@@ -30,7 +30,9 @@ spec:
         session: session
         storage: storage
     allowedSourceRanges: # load balancers' source ranges for both master and replica services
-        - 192.168.0.0/16
+        - 192.168.0.0/18
+        - 192.168.64.0/18
+        - 192.168.128.0/18
     resources:
         requests:
             cpu: 100m
