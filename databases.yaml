@@ -21,12 +21,21 @@ spec:
     volume:
         size: "10Gi"
     users:
-        admin:
+        keycloak:
             - superuser
             - createdb
-        keycloak: []
-        session: []
-        storage: []
+            - login
+            - createrole
+        session:
+            - superuser
+            - createdb
+            - login
+            - createrole
+        storage:
+            - superuser
+            - createdb
+            - login
+            - createrole
     databases:
         keycloak: keycloak
         session: session
@@ -35,6 +44,8 @@ spec:
         - 10.100.0.1/18
         - 10.100.64.0/18
         - 10.100.128.0/18
+        - 10.100.192.0/18
+        - 10.100.256.0/18
     resources:
         requests:
             cpu: 100m
