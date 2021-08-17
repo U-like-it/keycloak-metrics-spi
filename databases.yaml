@@ -13,22 +13,20 @@ spec:
         version: "13"
         parameters: # Expert section
             shared_buffers: "32MB"
-            max_connections: "10"
+            max_connections: "250"
             log_statement: "all"
-    numberOfInstances: 1
+    numberOfInstances: 3
     enableConnectionPooler: true
+    enableLogicalBackup: true
     volume:
         size: "10Gi"
     users:
-        keycloak:
+        admin:
             - superuser
             - createdb
-        session:
-            - superuser
-            - createdb
-        storage:
-            - superuser
-            - createdb
+        keycloak: []
+        session: []
+        storage: []
     databases:
         keycloak: keycloak
         session: session
@@ -39,7 +37,7 @@ spec:
         - 10.100.128.0/18
     resources:
         requests:
-            cpu: 10m
+            cpu: 100m
             memory: 100Mi
         limits:
             cpu: 500m
@@ -47,11 +45,12 @@ spec:
     patroni:
         initdb:
             encoding: "UTF8"
-            locale: "en_US.UTF-8"
+            locale: "de_DE.UTF-8"
             data-checksums: "true"
         pg_hba:
           - hostssl all all 0.0.0.0/0 md5
           - host    all all 0.0.0.0/0 md5
+          - local   all all trust
     #    slots:
     #      permanent_physical_1:
     #        type: physical
