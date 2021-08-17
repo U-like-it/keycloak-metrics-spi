@@ -24,18 +24,12 @@ spec:
         keycloak:
             - superuser
             - createdb
-            - login
-            - createrole
         session:
             - superuser
             - createdb
-            - login
-            - createrole
         storage:
             - superuser
             - createdb
-            - login
-            - createrole
     databases:
         keycloak: keycloak
         session: session
