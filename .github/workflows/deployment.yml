@@ -1,4 +1,4 @@
-name: keycloak-metrics-pipeline
+name: keycloak-with-metrics-pipeline
 on:
     push:
         branches:
@@ -17,14 +17,14 @@ jobs:
                 with:
                     path: ./version.yaml
 
-            -   name: Create databases
-                uses: ianbelcher/eks-kubectl-action@master
-                with:
-                    aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                    aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                    aws_region: ${{ secrets.AWS_REGION }}
-                    cluster_name: ulikeit-kubernetes
-                    args: apply -f ./databases.yaml
+#            -   name: Create databases
+#                uses: ianbelcher/eks-kubectl-action@master
+#                with:
+#                    aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#                    aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#                    aws_region: ${{ secrets.AWS_REGION }}
+#                    cluster_name: ulikeit-kubernetes
+#                    args: apply -f ./databases.yaml
 
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v1
