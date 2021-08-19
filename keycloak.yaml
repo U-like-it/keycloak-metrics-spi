@@ -65,9 +65,15 @@ extraEnv: |
     - name: DB_DATABASE
       value: keycloak
     - name: DB_USER
-      value: postgres
+      valueFrom:
+          secretKeyRef:
+            name: keycloak.ulikeit-database.credentials.postgresql.acid.zalan.do
+            key: username
     - name: DB_PASSWORD
-      value: xCvSYz8JsrTO2M8Q7hUsjg7YwdAsl3KIfAwClsoQJh1QDil4D7xB9PaBIkhGVQp5
+      valueFrom:
+          secretKeyRef:
+            name: keycloak.ulikeit-database.credentials.postgresql.acid.zalan.do
+            key: password
     - name: KEYCLOAK_USER
       value: admin
     - name: KEYCLOAK_PASSWORD
