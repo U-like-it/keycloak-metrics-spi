@@ -14,7 +14,7 @@ spec:
         parameters: # Expert section
             shared_buffers: "32MB"
             max_connections: "250"
-            log_statement: "all"
+            log_statement: "none"
     numberOfInstances: 1
     enableConnectionPooler: true
     enableLogicalBackup: true
