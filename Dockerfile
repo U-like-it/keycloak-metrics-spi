@@ -5,5 +5,5 @@ RUN gradle build --no-daemon
 
 FROM openjdk:8-jre-slim
 
-COPY --from=build /home/gradle/src/build/libs/*.jar ./keycloak-metrics-spi.jar
-RUN touch ./keycloak-metrics-spi.jar.dodeploy
+#COPY --from=build /home/gradle/src/build/libs/*.jar ./keycloak-metrics-spi.jar
+#RUN touch ./keycloak-metrics-spi.jar.dodeploy
