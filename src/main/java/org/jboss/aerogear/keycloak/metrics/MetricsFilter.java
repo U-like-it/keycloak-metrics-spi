@@ -7,15 +7,9 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class MetricsFilter implements ContainerRequestFilter, ContainerResponseFilter {
     private static final Logger LOG = Logger.getLogger(MetricsFilter.class);
@@ -23,20 +17,25 @@ public final class MetricsFilter implements ContainerRequestFilter, ContainerRes
     private static final String METRICS_REQUEST_TIMESTAMP = "metrics.requestTimestamp";
     private static final MetricsFilter INSTANCE = new MetricsFilter();
 
+    private static final boolean URI_METRICS_ENABLED = Boolean.parseBoolean(System.getenv("URI_METRICS_ENABLED"));
+
     // relevant response content types to be measured
     private static final Set<MediaType> contentTypes = new HashSet<>();
+
     static {
         contentTypes.add(MediaType.APPLICATION_JSON_TYPE);
         contentTypes.add(MediaType.APPLICATION_XML_TYPE);
         contentTypes.add(MediaType.TEXT_HTML_TYPE);
     }
+
     private static final Set<MediaType> CONTENT_TYPES = Collections.unmodifiableSet(contentTypes);
 
     public static MetricsFilter instance() {
         return INSTANCE;
     }
 
-    private MetricsFilter() { }
+    private MetricsFilter() {
+    }
 
     @Override
     public void filter(ContainerRequestContext req) {
@@ -48,12 +47,19 @@ public final class MetricsFilter implements ContainerRequestFilter, ContainerRes
         int status = res.getStatus();
 
         String resource = ResourceExtractor.getResource(req.getUriInfo());
+        String uri = ResourceExtractor.getURI(req.getUriInfo());
 
-        PrometheusExporter.instance().recordResponseTotal(status, req.getMethod(), resource);
-        if (status >= 400) {
-            PrometheusExporter.instance().recordResponseError(status, req.getMethod(), resource);
+        if (URI_METRICS_ENABLED) {
+            PrometheusExporter.instance().recordResponseTotal(status, req.getMethod(), resource, uri);
+            if (status >= 400) {
+                PrometheusExporter.instance().recordResponseError(status, req.getMethod(), resource, uri);
+            }
+        } else {
+            PrometheusExporter.instance().recordResponseTotal(status, req.getMethod(), resource);
+            if (status >= 400) {
+                PrometheusExporter.instance().recordResponseError(status, req.getMethod(), resource);
+            }
         }
-
         // Record request duration if timestamp property is present
         // and only if it is relevant (skip pictures)
         if (req.getProperty(METRICS_REQUEST_TIMESTAMP) != null &&
@@ -61,7 +67,11 @@ public final class MetricsFilter implements ContainerRequestFilter, ContainerRes
             long time = (long) req.getProperty(METRICS_REQUEST_TIMESTAMP);
             long dur = System.currentTimeMillis() - time;
             LOG.trace("Duration is calculated as " + dur + " ms.");
-            PrometheusExporter.instance().recordRequestDuration(dur, req.getMethod(), resource);
+            if (URI_METRICS_ENABLED) {
+                PrometheusExporter.instance().recordRequestDuration(status, dur, req.getMethod(), resource, uri);
+            } else {
+                PrometheusExporter.instance().recordRequestDuration(status, dur, req.getMethod(), resource);
+            }
         }
     }
 

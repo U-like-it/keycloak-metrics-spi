@@ -2,7 +2,7 @@
 
 # Keycloak Metrics SPI
 
-A [Service Provider](https://www.keycloak.org/docs/4.8/server_development/index.html#_providers) that adds a metrics endpoint to Keycloak. The endpoint returns metrics data ready to be scraped by [Prometheus](https://prometheus.io/).
+A [Service Provider](https://www.keycloak.org/docs/latest/server_development/index.html#_providers) that adds a metrics endpoint to Keycloak. The endpoint returns metrics data ready to be scraped by [Prometheus](https://prometheus.io/).
 
 Two distinct providers are defined:
 
@@ -24,6 +24,14 @@ $ ./gradlew test
 
 ## Build
 
+There are two ways to build the project using:
+ * [Gradle](https://gradle.org/)
+ * [Maven](https://maven.apache.org/)
+
+You can choose between the tools the most convenient for you. Read further how to use each of them.
+
+### Gradle
+
 The project is packaged as a jar file and bundles the prometheus client libraries.
 
 ```sh
@@ -32,15 +40,33 @@ $ ./gradlew jar
 
 builds the jar and writes it to _build/libs_.
 
+### Maven
+
+To build the jar file using maven run the following command (will bundle the prometheus client libraries as well):
+
+```sh
+mvn package
+```
+
+It will build the project and write jar to the _./target_.
+
 ### Configurable versions for some packages
 
 You can build the project using a different version of Keycloak or Prometheus, running the command:
 
+#### For Gradle
+
 ```sh
-$ ./gradlew -PkeycloakVersion="4.7.0.Final" -PprometheusVersion="0.3.0" jar
+$ ./gradlew -PkeycloakVersion="15.0.2.Final" -PprometheusVersion="0.12.0" jar
 ```
 
 or by changing the `gradle.properties` file in the root of the project.
+
+#### For Maven
+
+```sh
+mvn clean package -Dkeycloak.version=15.0.0 -Dprometheus.version=0.9.0
+```
 
 ## Install and setup
 
@@ -79,6 +105,7 @@ the metrics endpoint of each node. To fix this, you can push your metrics to a P
 You can enable pushing to PushGateway by setting the environment variable ```PROMETHEUS_PUSHGATEWAY_ADDRESS``` in the keycloak
 instance. The format is host:port or ip:port of the Pushgateway.
 
+#### **Grouping instances**
 The default value for the grouping key "instance" is the IP. This can be changed setting the environment variable ```PROMETHEUS_GROUPING_KEY_INSTANCE```
 to a fixed value. Additionaly, if the value provided starts with the prefix ```ENVVALUE:```,
 the string after the ```:``` will be used to get the value from the environment variable with that name.
@@ -88,6 +115,16 @@ PROMETHEUS_GROUPING_KEY_INSTANCE=ENVVALUE:HOSTNAME
 ```
 ```instance``` will have the value of the environment variable ```HOSTNAME```
 
+#### **Grouping instances by cluster**
+if you have multiple KeyCloak clusters on the same runtime then you might like to groups instances by cluster's name.
+
+That's the purpose of the environment variable ```PROMETHEUS_PUSHGATEWAY_JOB```.
+The default *job* value is *keycloak* for all the instances.
+
+For example for all the instances of a KeyCloak cluster #1 you can set:
+```c
+PROMETHEUS_PUSHGATEWAY_JOB="keycloak-cluster1"
+```
 ## Metrics
 
 For each metric, the endpoint returns 2 or more lines of information:
@@ -272,6 +309,101 @@ This counter counts the number of response errors (responses where the http stat
 # TYPE keycloak_response_errors counter
 keycloak_response_errors{code="500",method="GET",} 1
 ```
+
+#### Metrics URI
+The URI can be added to the metrics by setting the environment variable ```URI_METRICS_ENABLED``` to `true`. 
+This will output a consolidated realm URI value to the metrics. The realm value is replaced with a generic `{realm}` value
+```c
+# HELP keycloak_request_duration Request duration
+# TYPE keycloak_request_duration histogram
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="50.0",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="100.0",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="250.0",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="500.0",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="1000.0",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="2000.0",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="10000.0",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="30000.0",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/3p-cookies/step2.html",le="+Inf",} 2.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="50.0",} 0.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="100.0",} 0.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="250.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="500.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="1000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="2000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="10000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="30000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="admin/{realm}/console/whoami",le="+Inf",} 1.0
+```
+
+If the quanitiy of metrics is too high they can also be filtered to specific values using the ```URI_METRICS_FILTER``` e.g `token,clients`. 
+This is a comman delimited value of keywords to search and display the required URIs. 
+
+```c
+# HELP keycloak_request_duration Request duration
+# TYPE keycloak_request_duration histogram
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="50.0",} 0.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="100.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="250.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="500.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="1000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="2000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="10000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="30000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/{realm}/protocol/openid-connect/token",le="+Inf",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="50.0",} 4.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="100.0",} 5.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="250.0",} 6.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="500.0",} 6.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="1000.0",} 6.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="2000.0",} 6.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="10000.0",} 6.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="30000.0",} 6.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/master/console",uri="",le="+Inf",} 6.0
+keycloak_request_duration_count{code="200",method="GET",resource="admin,admin/master/console",uri="",} 6.0
+keycloak_request_duration_sum{code="200",method="GET",resource="admin,admin/master/console",uri="",} 274.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="50.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="100.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="250.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="500.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="1000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="2000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="10000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="30000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="+Inf",} 1.0
+keycloak_request_duration_count{code="200",method="GET",resource="admin,admin/serverinfo",uri="",} 1.0
+```
+
+To remove the consolidated realm URI, set ```URI_METRICS_DETAILED``` to `true`
+
+```c
+# HELP keycloak_request_duration Request duration
+# TYPE keycloak_request_duration histogram
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="50.0",} 0.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="100.0",} 0.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="250.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="500.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="1000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="2000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="10000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="30000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="POST",resource="realms,realms/master/protocol/openid-connect",uri="realms/master/protocol/openid-connect/token",le="+Inf",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="50.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="100.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="250.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="500.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="1000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="2000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="10000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="30000.0",} 1.0
+keycloak_request_duration_bucket{code="200",method="GET",resource="admin,admin/serverinfo",uri="",le="+Inf",} 1.0
+keycloak_request_duration_count{code="200",method="GET",resource="admin,admin/serverinfo",uri="",} 1.0
+keycloak_request_duration_sum{code="200",method="GET",resource="admin,admin/serverinfo",uri="",} 19.0
+```
+
+## External Access
+
+To disable metrics being externally accessible to a cluster. Set the environment variable 'DISABLE_EXTERNAL_ACCESS'. Once set enable the header 'X-Forwarded-Host' on your proxy. This is enabled by default on HA Proxy on Openshift.
 
 ## Grafana Dashboard
 
