@@ -105,20 +105,20 @@ service:
 postgresql:
     enabled: false
 
-replicas: 1
+replicas: 3
 ingres:
     enabled: false
 
 autoscaling:
-    enabled: false
+    enabled: true
 
 serviceMonitor:
     # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-    enabled: false
+    enabled: true
     namespace: default
 extraServiceMonitor:
     enabled: false
     namespace: default
 
 prometheusRule:
-    enabled: false
+    enabled: true
