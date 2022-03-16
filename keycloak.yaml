@@ -105,7 +105,7 @@ service:
 postgresql:
     enabled: false
 
-replicas: 4
+replicas: 5
 ingres:
     enabled: false
 
