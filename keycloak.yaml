@@ -114,7 +114,7 @@ autoscaling:
 
 serviceMonitor:
     # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-    enabled: false
+    enabled: true
     namespace: default
 extraServiceMonitor:
     enabled: false
