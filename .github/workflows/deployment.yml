@@ -16,7 +16,6 @@ jobs:
         uses: juliangruber/read-file-action@v1
         with:
           path: ./version.yaml
-
 #      - name: Create databases
 #        uses: ianbelcher/eks-kubectl-action@master
 #        with:
