@@ -7,8 +7,6 @@ extraVolumeMounts: |
     - name: realm-secret
       mountPath: "/realm/"
       readOnly: true
-    - name: keycloak-spi
-      mountPath: /opt/jboss/keycloak/standalone/deployments
 
 extraEnv: |
     - name: JGROUPS_DISCOVERY_PROTOCOL
