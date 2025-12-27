@@ -13,7 +13,10 @@
       "Bash(aws sts get-caller-identity:*)",
       "Bash(aws ecr get-login-password:*)",
       "Bash(docker login:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(helm upgrade:*)",
+      "Bash(kubectl get:*)"
     ],
     "deny": [],
     "ask": []
