@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - production
+
 jobs:
   release-keycloak:
     runs-on: ubuntu-latest
