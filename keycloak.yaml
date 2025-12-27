@@ -1,7 +1,7 @@
 extraInitContainers: |
     - name: spi-provider
-      image: 290531689160.dkr.ecr.eu-central-1.amazonaws.com/ulikeit-keycloak-metrics-spi:latest
-      imagePullPolicy: Always
+      image: ulikeit-keycloak-metrics-spi:latest
+      imagePullPolicy: Never
       command:
         - sh
       args:
@@ -100,7 +100,8 @@ service:
     httpNodePort: "30800"
     annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "9990"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/auth/realms/master/metrics"
 
 postgresql:
     enabled: false
