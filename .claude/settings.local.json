@@ -16,7 +16,13 @@
       "Bash(git add:*)",
       "Bash(git push:*)",
       "Bash(helm upgrade:*)",
-      "Bash(kubectl get:*)"
+      "Bash(kubectl get:*)",
+      "Bash(./gradlew clean build:*)",
+      "Bash(kubectl logs:*)",
+      "Bash(kubectl delete:*)",
+      "Bash(docker push:*)",
+      "Bash(kubectl create configmap:*)",
+      "Bash(kubectl apply:*)"
     ],
     "deny": [],
     "ask": []

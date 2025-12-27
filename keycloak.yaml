@@ -72,6 +72,10 @@ service:
     type: NodePort
     httpPort: "8080"
     httpNodePort: "30800"
+    annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/auth/realms/master/metrics"
 
 postgresql:
     enabled: false
