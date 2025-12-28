@@ -56,6 +56,9 @@ extraEnv: |
         -Dkeycloak.migration.strategy=IGNORE_EXISTING
         -Dkeycloak.migration.dir=/realm
         -Dkeycloak.profile.feature.upload_scripts=enabled
+        -Dkeycloak.eventsListener.metrics-listener.enabled=true
+        -Dkeycloak.events.enabled=true
+        -Dkeycloak.events.adminEventsEnabled=true
     - name: DB_VENDOR
       value: postgres
     - name: DB_ADDR
