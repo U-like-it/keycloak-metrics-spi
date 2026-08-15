@@ -114,8 +114,18 @@ autoscaling:
     enabled: true
 
 serviceMonitor:
-    # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-    enabled: true
+    # The chart's own ServiceMonitor scrapes /metrics on the WildFly management port 9990, and
+    # Prometheus 3 refuses that response: the endpoint answers 200 but sends a blank Content-Type
+    # ("non-compliant scrape target ... no fallback_scrape_protocol specified"). The target was
+    # therefore permanently down from 2026-08-02, which kept KeycloakDown and TargetDown firing
+    # while every login worked.
+    #
+    # Off, because the metrics are already collected twice over: the per-realm endpoints on 8080
+    # (ServiceMonitor keycloak-metrics) and the nginx proxy that adds the missing header
+    # (keycloak-wildfly-metrics-proxy), both defined in infrastructure/lib/charts.ts. The live
+    # object was deleted by hand on 2026-08-15; this keeps the next `helm upgrade` from recreating
+    # it. See infrastructure/docs/keycloak-monitoring.md.
+    enabled: false
     namespace: default
 extraServiceMonitor:
     enabled: false
