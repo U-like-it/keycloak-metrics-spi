@@ -106,6 +106,11 @@ service:
 postgresql:
     enabled: false
 
+# WARNING: the live release runs replicas: 1 with autoscaling off. This file has never described
+# that deployment, so `helm upgrade -f keycloak.yaml` would take Keycloak from one pod to four on a
+# chart that idles at 968Mi against a 1Gi limit. To make only the serviceMonitor change below
+# durable, use: helm upgrade keycloak <chart> -n default --reuse-values --set serviceMonitor.enabled=false
+# See infrastructure/docs/keycloak-monitoring.md.
 replicas: 4
 ingres:
     enabled: false
