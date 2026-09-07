@@ -22,12 +22,25 @@
       ],
       "disableableCredentialTypes": [],
       "requiredActions": [],
-      "realmRoles": ["offline_access", "uma_authorization"],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
       "clientRoles": {
-        "account": ["view-profile", "manage-account"]
+        "account": [
+          "view-profile",
+          "manage-account"
+        ]
       },
       "notBefore": 0,
-      "groups": ["/Shop Users"]
+      "groups": [
+        "/Shop Users"
+      ],
+      "attributes": {
+        "sandbox": [
+          "true"
+        ]
+      }
     },
     {
       "id": "f17dcfc2-1570-422c-a96d-2ef2165a1ca6",
@@ -50,12 +63,28 @@
       ],
       "disableableCredentialTypes": [],
       "requiredActions": [],
-      "realmRoles": ["offline_access", "uma_authorization"],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
       "clientRoles": {
-        "account": ["view-profile", "manage-account"]
+        "account": [
+          "view-profile",
+          "manage-account"
+        ]
       },
       "notBefore": 0,
-      "groups": ["/Editors"]
+      "groups": [
+        "/Editors"
+      ],
+      "attributes": {
+        "sandbox": [
+          "true"
+        ],
+        "stripe_customer_id": [
+          "cus_UNWm4907vULSaw"
+        ]
+      }
     }
   ]
 }

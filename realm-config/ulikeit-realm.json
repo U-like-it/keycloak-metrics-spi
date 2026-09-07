@@ -778,8 +778,72 @@
         "offline_access",
         "microprofile-jwt"
       ]
+    },
+    {
+      "clientId": "lovemyshop-web",
+      "name": "LoveMyShop Web",
+      "rootUrl": "https://connect.u-like-it.de/",
+      "adminUrl": "https://connect.u-like-it.de/",
+      "baseUrl": "https://connect.u-like-it.de/",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "https://connect.u-like-it.de/callback",
+        "https://connect.u-like-it.de/silent-check-sso.html"
+      ],
+      "webOrigins": ["https://connect.u-like-it.de"],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://connect.u-like-it.de/*"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": false,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": ["web-origins", "profile", "roles", "email"],
+      "optionalClientScopes": ["address", "phone", "offline_access", "microprofile-jwt"]
+    },
+    {
+      "clientId": "seller-ui",
+      "name": "Seller UI",
+      "rootUrl": "https://seller.u-like-it.de/",
+      "adminUrl": "https://seller.u-like-it.de/",
+      "baseUrl": "https://seller.u-like-it.de/",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": ["https://seller.u-like-it.de/*"],
+      "webOrigins": ["https://seller.u-like-it.de"],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {},
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": ["web-origins", "profile", "roles", "email"],
+      "optionalClientScopes": ["address", "phone", "offline_access", "microprofile-jwt"]
     }
-  ],
+],
   "clientScopes": [
     {
       "id": "cb7a625d-5538-4e68-b9a8-e2190b7293f4",
